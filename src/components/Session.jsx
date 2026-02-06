@@ -549,9 +549,9 @@ export default function Session() {
       
 
       {step === 1 && (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1, minHeight: 0 }}>
           <div className="muted">Jouw piekergedachten van vandaag</div>
-          <div style={{ marginTop: 12, display: 'grid', gap: 10 }}>
+          <div style={{ marginTop: 12, display: 'grid', gap: 10, flex: 1, minHeight: 0, overflow: 'auto', WebkitOverflowScrolling: 'touch' }}>
             {entries.length === 0 && <div className="card">Nog geen opgeslagen gedachten vandaag</div>}
 
             {entries.map((e) => (
@@ -581,7 +581,7 @@ export default function Session() {
             </div>
           </div>
 
-          <div style={{ marginTop: 20, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
             <button className="btn btn--primary" onClick={handleNextFromChoose} disabled={!chosen}>Volgende</button>
           </div>
         </div>
