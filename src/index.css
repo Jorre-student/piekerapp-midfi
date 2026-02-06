@@ -171,11 +171,6 @@ input[type="tel"] {
     background: transparent;
     pointer-events: auto;
   }
-
-  /* ensure the session page has enough bottom padding to avoid input overlap */
-  .session-page {
-    padding-bottom: calc(120px + env(safe-area-inset-bottom, 12px));
-  }
 }
 
 /* Solution card hover affordance */
