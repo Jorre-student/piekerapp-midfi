@@ -1024,8 +1024,8 @@ export default function Session() {
             {/* quick replies moved to the input area so they sit directly above the input */}
           </div>
 
-          <div style={{ position: 'absolute', left: 0, right: 0, bottom: 12, padding: 12, boxSizing: 'border-box', pointerEvents: 'none' }}>
-            <div style={{ width: '100%', maxWidth: 420, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 4, pointerEvents: 'auto' }}>
+          <div className="chat-input-wrap">
+            <div className="chat-input-inner">
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-start', alignItems: 'center', marginBottom: 4 }}>
                 {getPrewrites(chatPhase).map((q, idx) => (
                   <button key={idx} className="btn" style={{ padding: '6px 10px', fontSize: 13 }} onClick={() => sendChatMessage(q)}>{q}</button>
@@ -1040,7 +1040,7 @@ export default function Session() {
                   disabled={chatPhase === 'finished'}
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); sendChatMessage(chatInput) } }}
-                  style={{ flex: 1, padding: '10px 12px', fontSize: 15, borderRadius: 8, border: 'none', background: '#efefef' }}
+                  style={{ flex: 1, padding: '10px 12px', fontSize: 16, borderRadius: 8, border: 'none', background: '#efefef' }}
                 />
                 <button className="btn btn--primary" onClick={() => sendChatMessage(chatInput)}>Stuur</button>
               </div>

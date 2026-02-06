@@ -136,6 +136,48 @@ body {
   padding: 12px 0 40px 0;
 }
 
+/* Chat input wrapper: desktop uses absolute to overlap content, mobile uses sticky so keyboard pushes layout */
+.chat-input-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  padding: 12px;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.chat-input-wrap .chat-input-inner {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: auto;
+}
+.chat-input-wrap .input,
+textarea,
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="tel"] {
+  font-size: 16px; /* prevents iOS zoom on focus */
+}
+
+@media (max-width: 640px) {
+  .chat-input-wrap {
+    position: sticky;
+    bottom: env(safe-area-inset-bottom, 12px);
+    background: transparent;
+    pointer-events: auto;
+  }
+
+  /* ensure the session page has enough bottom padding to avoid input overlap */
+  .session-page {
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 12px));
+  }
+}
+
 /* Solution card hover affordance */
 /* hover state removed for solution cards */
 
