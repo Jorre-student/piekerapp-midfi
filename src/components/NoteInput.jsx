@@ -40,7 +40,8 @@ export default function NoteInput({ onSave } = {}) {
           maxLength={max}
           className="input"
           placeholder="Schrijf hier kort je piekergedacht"
-          rows={3}
+          rows={2}
+          style={{ width: '100%', boxSizing: 'border-box' }}
         />
 
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>

@@ -24,15 +24,38 @@ body {
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(12, 18, 22, 0.06);
-  padding: 20px;
+  padding: 0;
 }
 
 @media (min-width: 768px) {
   .app-main {
     margin: 32px auto;
+    padding: 0;
+  }
+}
+
+/* Ensure children inside app-main have inner padding so content isn't glued to edges */
+.app-main > * {
+  padding: 20px;
+}
+@media (min-width: 768px) {
+  .app-main > * {
     padding: 28px;
   }
 }
+
+/* Ensure children inside session-page have inner padding so content isn't glued to edges */
+.session-page > * {
+  padding: 20px;
+}
+@media (min-width: 768px) {
+  .session-page > * {
+    padding: 28px;
+  }
+}
+
+/* Make width calculations predictable for elements that set width:100% */
+*, *::before, *::after { box-sizing: border-box }
 
 /* Simple UI tokens for mid-fi layout (fallbacks if Tailwind is not applied) */
 .title { font-size: 1.25rem; font-weight: 600; margin: 0 0 6px 0; }
