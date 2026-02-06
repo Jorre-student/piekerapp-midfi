@@ -863,7 +863,7 @@ export default function Session() {
       )}
 
       {step === 5 && chosenMethod === 'challenge' && (
-        <div style={{ marginTop: 20, flex: 1, minHeight: 0, overflow: 'auto', paddingBottom: 96 }}>
+        <div style={{ marginTop: 20, flex: 1, minHeight: 0, overflow: 'auto', paddingBottom: 12 }}>
           <h2 style={{ fontSize: 28, margin: 0 }}>Samenvatting</h2>
           <div className="muted" style={{ marginTop: 8 }}>Overzicht van jouw antwoorden</div>
 
@@ -999,11 +999,11 @@ export default function Session() {
       )}
 
       {step === 4 && chosenMethod === 'challenge' && (
-        <div style={{ marginTop: 12, paddingBottom: 96, display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+        <div style={{ marginTop: 12, paddingBottom: 12, display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
           {/* Keep the page-level hero/header — remove the duplicate inner title/back button */}
 
           <div style={{ marginTop: 12, maxWidth: 420, width: '100%', marginLeft: 'auto', marginRight: 'auto', display: 'flex', alignItems: 'stretch', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-            <div style={{ flex: 1, width: '100%', minHeight: 0, overflow: 'auto', WebkitOverflowScrolling: 'touch', boxSizing: 'border-box', paddingBottom: 96, display: 'flex', flexDirection: 'column', gap: 12 }} ref={chatScrollRef}>
+            <div style={{ flex: 1, width: '100%', minHeight: 0, overflow: 'auto', WebkitOverflowScrolling: 'touch', boxSizing: 'border-box', paddingBottom: 12, display: 'flex', flexDirection: 'column', gap: 12 }} ref={chatScrollRef}>
               {chatMessages.map((m, i) => (
                 <div
                   key={i}
