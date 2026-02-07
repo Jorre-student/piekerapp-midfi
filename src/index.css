@@ -138,13 +138,12 @@ body {
 
 /* Chat input wrapper: desktop uses absolute to overlap content, mobile uses sticky so keyboard pushes layout */
 .chat-input-wrap {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 12px;
+  /* keep the input in the document flow so it pushes the chat messages
+     and never hovers above content. On small screens it becomes sticky. */
+  position: relative;
   padding: 12px;
   box-sizing: border-box;
-  pointer-events: none;
+  pointer-events: auto;
 }
 .chat-input-wrap .chat-input-inner {
   width: 100%;
@@ -171,6 +170,12 @@ input[type="tel"] {
     background: transparent;
     pointer-events: auto;
   }
+}
+
+/* Chat messages container: leave space for absolute input on desktop, minimal on mobile */
+.chat-messages {
+  /* small internal spacing so last message isn't glued to the input */
+  padding-bottom: 12px;
 }
 
 /* Solution card hover affordance */

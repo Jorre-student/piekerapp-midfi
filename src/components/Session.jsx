@@ -1003,7 +1003,7 @@ export default function Session() {
           {/* Keep the page-level hero/header — remove the duplicate inner title/back button */}
 
           <div style={{ marginTop: 12, maxWidth: 420, width: '100%', marginLeft: 'auto', marginRight: 'auto', display: 'flex', alignItems: 'stretch', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-            <div style={{ flex: 1, width: '100%', minHeight: 0, overflow: 'auto', WebkitOverflowScrolling: 'touch', boxSizing: 'border-box', paddingBottom: 12, display: 'flex', flexDirection: 'column', gap: 12 }} ref={chatScrollRef}>
+            <div className="chat-messages" style={{ flex: 1, width: '100%', minHeight: 0, overflow: 'auto', WebkitOverflowScrolling: 'touch', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 12 }} ref={chatScrollRef}>
               {chatMessages.map((m, i) => (
                 <div
                   key={i}
