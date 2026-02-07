@@ -95,7 +95,7 @@ body {
   border-radius: 10px;
   background: #0f1720;
   color: #fff;
-  display: flex; /* always available */
+  display: none; /* hidden on small screens; shown on desktop via media query */
   align-items: center;
   justify-content: center;
   border: none;
