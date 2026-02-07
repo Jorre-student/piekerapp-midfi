@@ -30,6 +30,17 @@ export default function Session() {
   const [editingAssessment, setEditingAssessment] = useState(null)
   const [focusedField, setFocusedField] = useState(null)
 
+  // Admin / debug UI (persisted)
+  const [showAdminPanel, setShowAdminPanel] = useState(false)
+  const [showStepNumber, setShowStepNumber] = useState(() => {
+    try { return localStorage.getItem('pp_showStepNumber') === '1' } catch (e) { return false }
+  })
+
+  function toggleShowStepNumber(v) {
+    try { localStorage.setItem('pp_showStepNumber', v ? '1' : '0') } catch (e) {}
+    setShowStepNumber(v)
+  }
+
   // challenge (chat) flow state
   const [chatPhase, setChatPhase] = useState('reason')
   const [chatMessages, setChatMessages] = useState([
@@ -342,6 +353,33 @@ export default function Session() {
     return m ? m.emoji : ''
   }
 
+  // Slider state used for the 'helpfulness' chat question
+  const [helpfulnessValue, setHelpfulnessValue] = useState(NEUTRAL_INDEX)
+  const [helpfulnessTouched, setHelpfulnessTouched] = useState(false)
+
+  function sendHelpfulnessValue(val) {
+    const maxIdx = ASSESSMENT_STATES.length - 1
+    const mapped = maxIdx - val
+    const state = ASSESSMENT_STATES[mapped] || null
+    const label = state ? `${state.label}` : `${val}`
+    // Human-friendly Dutch scale labels matching the UI
+    const helpfulLabels = ['Helpt mij helemaal niet','Helpt mij niet echt','Helpt mij eerder niet','Neutraal','Helpt mij een beetje','Helpt mij goed','Helpt mij heel veel']
+    const scaleText = helpfulLabels[val] || label
+    // Prepend emoji for the mapped assessment state when available
+    const emoji = state && state.emoji ? `${state.emoji} ` : ''
+    // If the user has typed additional text in the chat input, attach it after the scale
+    const extra = (chatInput || '').trim()
+    const text = extra ? `${emoji}${scaleText} — ${extra}` : `${emoji}${scaleText}`
+    setChatMessages((m) => [...m, { from: 'user', text }])
+    recordAction({ type: 'challenge_helpfulness', value: val, label: scaleText, emoji: state && state.emoji ? state.emoji : null, extra })
+    // proceed the flow as if the user answered the helpfulness question
+    appendSystem('Probeer een helpende gedachte te schrijven naar jezelf', { phase: 'helping_thought' })
+    setPhase('helping_thought')
+    // clear transient input/touched state
+    setChatInput('')
+    setHelpfulnessTouched(false)
+  }
+
   function pointsForStrength(label) {
     if (!label) return 0
     switch (label) {
@@ -537,7 +575,7 @@ export default function Session() {
               ← Vorige
             </button>
           )}
-          <h1 style={{ fontSize: 24, margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>Piekersessie <span style={{ fontSize: 12, color: '#6b7280', background: '#f1f5f9', padding: '4px 8px', borderRadius: 8 }}>Step: {step}</span></h1>
+          <h1 style={{ fontSize: 24, margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>Piekersessie {showStepNumber && <span style={{ fontSize: 12, color: '#6b7280', background: '#f1f5f9', padding: '4px 8px', borderRadius: 8 }}>Step: {step}</span>}</h1>
         </div>
         {step === 6 && (
           <div style={{ marginTop: 12, background: '#fffbeb', border: '1px solid #fce7b0', padding: 12, borderRadius: 8 }}>
@@ -586,6 +624,21 @@ export default function Session() {
           </div>
         </div>
       )}
+
+      {/* Admin toggle (desktop) and panel - uses CSS in index.css */}
+      <button className="admin-toggle" onClick={() => setShowAdminPanel((s) => !s)} aria-label="Toggle admin panel">⚙️</button>
+      <div className="admin-panel" style={{ display: showAdminPanel ? 'block' : 'none' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <strong>Admin</strong>
+          <button className="btn" onClick={() => setShowAdminPanel(false)}>Sluiten</button>
+        </div>
+        <div style={{ marginTop: 12 }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input type="checkbox" checked={showStepNumber} onChange={(e) => toggleShowStepNumber(e.target.checked)} />
+            <span>Toon stapnummer in header</span>
+          </label>
+        </div>
+      </div>
 
       {step === 2 && (
         <div style={{ marginTop: 12 }}>
@@ -986,6 +1039,7 @@ export default function Session() {
 
                 <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}>
                   <button className="btn btn--primary" onClick={() => { recordAction({ type: 'complete_challenge_summary' }); handleFinish() }}>Voltooi piekermoment</button>
+                  <button className="btn" onClick={() => { recordAction({ type: 'download_pdf_challenge' }); window.print(); }} style={{ marginLeft: 8 }}>Download als PDF</button>
                 </div>
               </div>
             )
@@ -1033,16 +1087,53 @@ export default function Session() {
               </div>
 
               <div style={{ display: 'flex', gap: 8 }}>
-                <input
-                  className="input"
-                  placeholder={getPlaceholder(chatPhase)}
-                  value={chatInput}
-                  disabled={chatPhase === 'finished'}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); sendChatMessage(chatInput) } }}
-                  style={{ flex: 1, padding: '10px 12px', fontSize: 16, borderRadius: 8, border: 'none', background: '#efefef' }}
-                />
-                <button className="btn btn--primary" onClick={() => sendChatMessage(chatInput)}>Stuur</button>
+                {chatPhase === 'helpfulness' ? (
+                  (() => {
+                    const maxIdx = ASSESSMENT_STATES.length - 1
+                    const val = helpfulnessValue
+                    const p = (val / maxIdx) * 100
+                    const mapped = maxIdx - val
+                    const shown = ASSESSMENT_STATES[mapped]
+                    const stateSide = shown && shown.side
+                    const fillColor = stateSide === 'pros' ? 'rgba(159,230,192,0.95)' : stateSide === 'cons' ? 'rgba(255,204,153,0.95)' : '#c0c0c0'
+                    let bg
+                    if (Math.abs(p - 50) < 0.0001) bg = 'linear-gradient(to right, #eee 0%, #eee 100%)'
+                    else if (p > 50) bg = `linear-gradient(to right, #eee 0%, #eee 50%, ${fillColor} 50%, ${fillColor} ${p}%, #eee ${p}%, #eee 100%)`
+                    else bg = `linear-gradient(to right, #eee 0%, #eee ${p}%, ${fillColor} ${p}%, ${fillColor} 50%, #eee 50%, #eee 100%)`
+
+                    return (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'stretch', width: '100%' }}>
+                          <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: 28 }}>{shown ? shown.emoji : ''}</div>
+                            {(() => {
+                              const helpfulLabels = ['Helpt mij helemaal niet','Helpt mij niet echt','Helpt mij eerder niet','Neutraal','Helpt mij een beetje','Helpt mij goed','Helpt mij heel veel']
+                              const label = helpfulLabels[val] || (shown ? shown.label : '')
+                              return <div style={{ marginTop: 6, fontSize: 16, fontWeight: 600 }}>{label}</div>
+                            })()}
+                          </div>
+
+                          <input type="range" min={0} max={maxIdx} value={val} onChange={(e) => { setHelpfulnessValue(Number(e.target.value)); setHelpfulnessTouched(true); }} style={{ width: '100%', marginTop: 8, boxSizing: 'border-box', maxWidth: '100%', background: bg, appearance: 'none', height: 24 }} />
+
+                          <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <button className="btn btn--primary" onClick={() => sendHelpfulnessValue(helpfulnessValue)} disabled={!helpfulnessTouched}>Verzenden</button>
+                          </div>
+                      </div>
+                    )
+                  })()
+                ) : (
+                  <>
+                    <input
+                      className="input"
+                      placeholder={getPlaceholder(chatPhase)}
+                      value={chatInput}
+                      disabled={chatPhase === 'finished'}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' && chatInput.trim()) { e.preventDefault(); sendChatMessage(chatInput) } }}
+                      style={{ flex: 1, padding: '10px 12px', fontSize: 16, borderRadius: 8, border: 'none', background: '#efefef' }}
+                    />
+                    <button className="btn btn--primary" onClick={() => sendChatMessage(chatInput)} disabled={chatPhase === 'finished' || chatInput.trim().length === 0}>Stuur</button>
+                  </>
+                )}
               </div>
             </div>
           </div>

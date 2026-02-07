@@ -95,7 +95,7 @@ body {
   border-radius: 10px;
   background: #0f1720;
   color: #fff;
-  display: none; /* shown on desktop */
+  display: flex; /* always available */
   align-items: center;
   justify-content: center;
   border: none;
@@ -113,7 +113,11 @@ body {
   box-shadow: 0 12px 36px rgba(2,6,23,0.12);
   border-radius: 12px;
   overflow: auto;
-  display: none; /* only on desktop */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
+  max-height: calc(100vh - 96px);
+  display: block; /* visibility controlled by inline style */
 }
 
 @media (min-width: 1024px) {
