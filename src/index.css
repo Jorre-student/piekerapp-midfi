@@ -36,21 +36,21 @@ body {
 
 /* Ensure children inside app-main have inner padding so content isn't glued to edges */
 .app-main > * {
-  padding: 20px;
+  padding: 12px;
 }
 @media (min-width: 768px) {
   .app-main > * {
-    padding: 28px;
+    padding: 16px;
   }
 }
 
 /* Ensure children inside session-page have inner padding so content isn't glued to edges */
 .session-page > * {
-  padding: 20px;
+  padding: 12px;
 }
 @media (min-width: 768px) {
   .session-page > * {
-    padding: 28px;
+    padding: 16px;
   }
 }
 

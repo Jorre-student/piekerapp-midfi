@@ -588,7 +588,7 @@ export default function Session() {
       )}
 
       {step === 2 && (
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 12 }}>
           <h1 style={{ fontSize: 28, margin: 0 }}>Beschrijf jouw piekergedacht</h1>
           <div className="muted" style={{ marginTop: 8 }}>Waarover pieker je concreet?</div>
 
@@ -600,14 +600,14 @@ export default function Session() {
             onChange={(e) => setDetail(e.target.value.slice(0, 1000))}
           />
 
-          <div style={{ marginTop: 20, display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ marginTop: 12, display: 'flex', justifyContent: 'flex-end' }}>
             <button className="btn btn--primary" onClick={() => { recordAction({ type: 'describe', text: detail }); setStep(3) }} disabled={detail.trim().length === 0}>Volgende</button>
           </div>
         </div>
       )}
 
       {step === 41 && solutionDraft && (
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <button className="btn" onClick={() => { setSolutionDraft(null); setStep(4) }}>Annuleren</button>
             <div style={{ flex: 1, textAlign: 'center', fontWeight: 600 }}>Voeg mogelijke oplossing toe</div>
@@ -632,7 +632,7 @@ export default function Session() {
             }}>Opslaan</button>
           </div>
 
-          <div className="card" style={{ marginTop: 12, padding: 18, background: '#f3f3f3' }}>
+          <div className="card" style={{ marginTop: 12, padding: 12, background: '#f3f3f3', flex: 1, minHeight: 0, overflow: 'auto', WebkitOverflowScrolling: 'touch', display: 'flex', flexDirection: 'column' }}>
             <div className="muted">Mogelijke Oplossing</div>
             <input
               placeholder="Wat is een mogelijke oplossing?"
@@ -725,7 +725,7 @@ export default function Session() {
 
             {showAssessmentDrawer && (
               <div style={{ position: 'fixed', left: '50%', bottom: 16, transform: 'translateX(-50%)', width: '100%', maxWidth: 420, padding: 12, zIndex: 60, boxSizing: 'border-box' }}>
-                <div style={{ background: '#fff', borderRadius: 12, padding: 16, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', boxSizing: 'border-box', overflow: 'hidden' }}>
+                <div style={{ background: '#fff', borderRadius: 12, padding: 12, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', boxSizing: 'border-box', overflow: 'hidden' }}>
                   {(() => {
                     const maxIdx = ASSESSMENT_STATES.length - 1
                     const p = (assessmentValue / maxIdx) * 100
@@ -741,7 +741,7 @@ export default function Session() {
                       <>
                         <div style={{ textAlign: 'center', fontSize: 22 }}>{shown.emoji}</div>
                         <div style={{ textAlign: 'center', marginTop: 6 }}>{shown.label}</div>
-                        <input type="range" min={0} max={maxIdx} value={assessmentValue} onChange={(e) => setAssessmentValue(Number(e.target.value))} style={{ width: '100%', marginTop: 12, boxSizing: 'border-box', maxWidth: '100%', background: bg, appearance: 'none', height: 28 }} />
+                        <input type="range" min={0} max={maxIdx} value={assessmentValue} onChange={(e) => setAssessmentValue(Number(e.target.value))} style={{ width: '100%', marginTop: 8, boxSizing: 'border-box', maxWidth: '100%', background: bg, appearance: 'none', height: 24 }} />
                       </>
                     )
                   })()}
@@ -759,7 +759,7 @@ export default function Session() {
       )}
 
         {step === 5 && chosenMethod !== 'challenge' && (
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div style={{ flex: 1, textAlign: 'center', fontWeight: 600 }}>Oplossing bekijken</div>
           </div>
@@ -1011,7 +1011,7 @@ export default function Session() {
                     alignSelf: m.from === 'system' ? 'flex-start' : 'flex-end',
                     maxWidth: '76%',
                     background: m.from === 'system' ? '#f3f3f3' : '#dbeafe',
-                    padding: '10px 14px',
+                    padding: '8px 12px',
                     borderRadius: 12,
                     fontSize: 15,
                   }}
@@ -1051,7 +1051,7 @@ export default function Session() {
 
 
       {step === 3 && (
-        <div style={{ marginTop: 20, background: 'var(--primary,#0b74ff)', color: '#fff', padding: 18, borderRadius: 10 }}>
+        <div style={{ marginTop: 16, background: 'var(--primary,#0b74ff)', color: '#fff', padding: 12, borderRadius: 10 }}>
           <h2 style={{ margin: 0 }}>Hoe wil jij hiermee aan de slag gaan?</h2>
           <div style={{ marginTop: 12, display: 'grid', gap: 12 }}>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center', background: '#fff', padding: 12, borderRadius: 8 }}>
